@@ -72,7 +72,7 @@ def cube():
     glBegin(GL_QUADS)
     for face in faces:
         for vertex, id in zip(face, range(0, 4)):
-            glColor3fv((0, 1, 0))
+            glColor3fv((1, 1, 1))
             glTexCoord2fv(textcoords[id])
             glVertex3fv(verticies[vertex])
     glEnd()
