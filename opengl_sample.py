@@ -8,6 +8,50 @@ import numpy as np
 # (<x>, <y>, <z>)
 from pygame.tests.test_utils.png import Image
 
+textcoords = (
+    (0, 0),
+    (0, 1),
+    (1, 1),
+    (1, 0)
+    )
+
+verticies = (
+    (1, 1, 1),      #0
+    (1, 1, -1),     #1
+    (1, -1, 1),     #2
+    (1, -1, -1),    #3
+    (-1, 1, 1),     #4
+    (-1, 1, -1),    #5
+    (-1, -1, 1),    #6
+    (-1, -1, -1),   #7
+    )
+# (<node1>, <node2>)
+edges = (
+    (0, 1),         #0
+    (0, 2),         #1
+    (0, 4),         #2
+    (1, 3),         #3
+    (1, 5),         #4
+    (2, 3),         #5
+    (2, 6),         #6
+    (3, 7),         #7
+    (4, 5),         #8
+    (4, 6),         #9
+    (5, 7),         #10
+    (6, 7),         #11
+    )
+
+# (<node1>, <node2>, <node3>, <node4>)
+faces = (
+    (0, 1, 3, 2),   #0
+    (0, 1, 5, 4),   #1
+    (0, 2, 6, 4),   #2
+    (1, 3, 7, 5),   #3
+    (2, 3, 7, 6),   #4
+    (4, 5, 7, 6),   #5
+    )
+
+
 def loadTexture(filename):
     """load OpenGL 2D texture from given image file"""
     img = PIL.Image.open(filename)
@@ -23,56 +67,21 @@ def loadTexture(filename):
     glGenerateMipmap(GL_TEXTURE_2D)
     return texture
 
+
 def cube():
-    glBegin(GL_QUADS);
-    glTexCoord2f(0.0, 0.0);
-    glVertex3f(-1.0, -1.0, 1.0);
-    glTexCoord2f(1.0, 0.0);
-    glVertex3f(1.0, -1.0, 1.0);
-    glTexCoord2f(1.0, 1.0);
-    glVertex3f(1.0, 1.0, 1.0);
-    glTexCoord2f(0.0, 1.0);
-    glVertex3f(-1.0, 1.0, 1.0);
-    glTexCoord2f(1.0, 0.0);
-    glVertex3f(-1.0, -1.0, -1.0);
-    glTexCoord2f(1.0, 1.0);
-    glVertex3f(-1.0, 1.0, -1.0);
-    glTexCoord2f(0.0, 1.0);
-    glVertex3f(1.0, 1.0, -1.0);
-    glTexCoord2f(0.0, 0.0);
-    glVertex3f(1.0, -1.0, -1.0);
-    glTexCoord2f(0.0, 1.0);
-    glVertex3f(-1.0, 1.0, -1.0);
-    glTexCoord2f(0.0, 0.0);
-    glVertex3f(-1.0, 1.0, 1.0);
-    glTexCoord2f(1.0, 0.0);
-    glVertex3f(1.0, 1.0, 1.0);
-    glTexCoord2f(1.0, 1.0);
-    glVertex3f(1.0, 1.0, -1.0);
-    glTexCoord2f(1.0, 1.0);
-    glVertex3f(-1.0, -1.0, -1.0);
-    glTexCoord2f(0.0, 1.0);
-    glVertex3f(1.0, -1.0, -1.0);
-    glTexCoord2f(0.0, 0.0);
-    glVertex3f(1.0, -1.0, 1.0);
-    glTexCoord2f(1.0, 0.0);
-    glVertex3f(-1.0, -1.0, 1.0);
-    glTexCoord2f(1.0, 0.0);
-    glVertex3f(1.0, -1.0, -1.0);
-    glTexCoord2f(1.0, 1.0);
-    glVertex3f(1.0, 1.0, -1.0);
-    glTexCoord2f(0.0, 1.0);
-    glVertex3f(1.0, 1.0, 1.0);
-    glTexCoord2f(0.0, 0.0);
-    glVertex3f(1.0, -1.0, 1.0);
-    glTexCoord2f(0.0, 0.0);
-    glVertex3f(-1.0, -1.0, -1.0);
-    glTexCoord2f(1.0, 0.0);
-    glVertex3f(-1.0, -1.0, 1.0);
-    glTexCoord2f(1.0, 1.0);
-    glVertex3f(-1.0, 1.0, 1.0);
-    glTexCoord2f(0.0, 1.0);
-    glVertex3f(-1.0, 1.0, -1.0);
+    glBegin(GL_QUADS)
+    for face in faces:
+        for vertex, id in zip(face, range(0, 4)):
+            glColor3fv((0, 1, 0))
+            glTexCoord2fv(textcoords[id])
+            glVertex3fv(verticies[vertex])
+    glEnd()
+
+    glBegin(GL_LINES)
+    for edge in edges:
+        for vertex in edge:
+            glColor3fv((0, 0, 0))
+            glVertex3fv(verticies[vertex])
     glEnd()
 
 def main():
