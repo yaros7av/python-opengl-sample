@@ -61,45 +61,67 @@ def loadTexture(filename):
     img = PIL.Image.open(filename)
     print("loaded image: %s with size: %s" % (filename, str(img.size)))
     dur = list(img.getdata())
-    imgData = np.array(dur, dtype=np.uint8)
+    img_data = np.array(dur, dtype=np.uint8)
+    glEnable(GL_TEXTURE_2D)
     texture = glGenTextures(1)
-    glPixelStorei(GL_UNPACK_ALIGNMENT,1)
     glBindTexture(GL_TEXTURE_2D, texture)
-    glPixelStorei(GL_UNPACK_ALIGNMENT,1)
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR)
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR)
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, img.size[0], img.size[1],
-                 0, GL_RGBA, GL_UNSIGNED_BYTE, imgData)
-    glBindTexture(GL_TEXTURE_2D, 0)
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, img.size[0], img.size[1], 0, GL_RGB, GL_UNSIGNED_BYTE, img_data)
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST)
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR)
+    glGenerateMipmap(GL_TEXTURE_2D)
     return texture
 
-
-def setupTexture():
-        """Render-time texture environment setup"""
-        glEnable(GL_TEXTURE_2D)
-        glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST)
-        glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST)
-        glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL)
-
-        imageID = loadTexture("test.bmp")
-        glBindTexture(GL_TEXTURE_2D, imageID)
-
 def cube():
-    glBegin(GL_QUADS)
-    for face in faces:
-        for vertex in face:
-            glColor3fv((0, 1, 0))
-            glTexCoord2fv(textcoords[vertex])
-            glVertex3fv(verticies[vertex])
+    glBegin(GL_QUADS);
+    glTexCoord2f(0.0, 0.0);
+    glVertex3f(-1.0, -1.0, 1.0);
+    glTexCoord2f(1.0, 0.0);
+    glVertex3f(1.0, -1.0, 1.0);
+    glTexCoord2f(1.0, 1.0);
+    glVertex3f(1.0, 1.0, 1.0);
+    glTexCoord2f(0.0, 1.0);
+    glVertex3f(-1.0, 1.0, 1.0);
+    glTexCoord2f(1.0, 0.0);
+    glVertex3f(-1.0, -1.0, -1.0);
+    glTexCoord2f(1.0, 1.0);
+    glVertex3f(-1.0, 1.0, -1.0);
+    glTexCoord2f(0.0, 1.0);
+    glVertex3f(1.0, 1.0, -1.0);
+    glTexCoord2f(0.0, 0.0);
+    glVertex3f(1.0, -1.0, -1.0);
+    glTexCoord2f(0.0, 1.0);
+    glVertex3f(-1.0, 1.0, -1.0);
+    glTexCoord2f(0.0, 0.0);
+    glVertex3f(-1.0, 1.0, 1.0);
+    glTexCoord2f(1.0, 0.0);
+    glVertex3f(1.0, 1.0, 1.0);
+    glTexCoord2f(1.0, 1.0);
+    glVertex3f(1.0, 1.0, -1.0);
+    glTexCoord2f(1.0, 1.0);
+    glVertex3f(-1.0, -1.0, -1.0);
+    glTexCoord2f(0.0, 1.0);
+    glVertex3f(1.0, -1.0, -1.0);
+    glTexCoord2f(0.0, 0.0);
+    glVertex3f(1.0, -1.0, 1.0);
+    glTexCoord2f(1.0, 0.0);
+    glVertex3f(-1.0, -1.0, 1.0);
+    glTexCoord2f(1.0, 0.0);
+    glVertex3f(1.0, -1.0, -1.0);
+    glTexCoord2f(1.0, 1.0);
+    glVertex3f(1.0, 1.0, -1.0);
+    glTexCoord2f(0.0, 1.0);
+    glVertex3f(1.0, 1.0, 1.0);
+    glTexCoord2f(0.0, 0.0);
+    glVertex3f(1.0, -1.0, 1.0);
+    glTexCoord2f(0.0, 0.0);
+    glVertex3f(-1.0, -1.0, -1.0);
+    glTexCoord2f(1.0, 0.0);
+    glVertex3f(-1.0, -1.0, 1.0);
+    glTexCoord2f(1.0, 1.0);
+    glVertex3f(-1.0, 1.0, 1.0);
+    glTexCoord2f(0.0, 1.0);
+    glVertex3f(-1.0, 1.0, -1.0);
     glEnd()
-
-    glBegin(GL_LINES)
-    for edge in edges:
-        for vertex in edge:
-            glColor3fv((0, 0, 0))
-            glVertex3fv(verticies[vertex])
-    glEnd()
-
 
 def main():
     pygame.init()
@@ -108,7 +130,7 @@ def main():
 
     gluPerspective(45, (display[0]/display[1]), 0.1, 50.0)
 
-    setupTexture()
+    loadTexture("test.bmp")
 
     glTranslatef(0.0, 0.0, -5)
 
